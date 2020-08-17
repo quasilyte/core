@@ -154,6 +154,13 @@ class RepairInvalidShares implements IRepairStep {
 		}
 	}
 
+	/**
+	 * TODO
+	 */
+	private function adjustReshareUidOwner(IOutput $out) {
+
+	}
+
 	public function run(IOutput $out) {
 		$ocVersionFromBeforeUpdate = $this->config->getSystemValue('version', '0.0.0');
 		if (\version_compare($ocVersionFromBeforeUpdate, '8.2.0.7', '<')) {
@@ -166,6 +173,9 @@ class RepairInvalidShares implements IRepairStep {
 		}
 		if (\version_compare($ocVersionFromBeforeUpdate, '9.2.0.2', '<')) {
 			$this->adjustFileSharePermissions($out);
+		}
+		if (\version_compare($ocVersionFromBeforeUpdate, '10.6.0.0', '<')) {
+			$this->adjustReshareUidOwner($out);
 		}
 
 		$this->removeSharesNonExistingParent($out);
