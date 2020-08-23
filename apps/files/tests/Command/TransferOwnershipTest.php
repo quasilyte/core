@@ -162,7 +162,6 @@ class TransferOwnershipTest extends TestCase {
 		$sharerFolder = \OC::$server->getUserFolder($this->shareSender->getUID());
 
 		$file = $sharerFolder->newFile('shared_file_to_source_user');
-		$file->putContent('A test file');
 		$share = $this->shareManager->newShare();
 		$share->setNode($file)
 			->setSharedBy('share-sender')
@@ -172,14 +171,18 @@ class TransferOwnershipTest extends TestCase {
 		$this->shareManager->createShare($share);
 
 		$file = $sharerFolder->newFile('reshare_file_to_source_user');
-		$file->putContent('A test file');
 		$share = $this->shareManager->newShare();
 		$share->setNode($file)
 			->setSharedBy('share-sender')
 			->setSharedWith('source-user')
 			->setShareType(Share::SHARE_TYPE_USER)
 			->setPermissions(19);
-		$this->shareManager->createShare($share);
+		$sharesi = $this->shareManager->createShare($share);
+
+		echo "share->reshare_file_to_source_user";
+		echo PHP_EOL;
+
+		echo $sharesi->getId() . '/' . $sharesi->getTarget() . '/' . $sharesi->getShareOwner() . '/' . $sharesi->getSharedBy() . '/' . $sharesi->getSharedWith() . ' ' . PHP_EOL;
 
 		$sourceUserFolder = \OC::$server->getUserFolder($this->sourceUser->getUID());
 
@@ -223,6 +226,24 @@ class TransferOwnershipTest extends TestCase {
 			->setShareType(Share::SHARE_TYPE_USER)
 			->setPermissions(19);
 		$this->shareManager->createShare($share);
+
+		echo "files->";
+		echo PHP_EOL;
+
+		$list = $sourceUserFolder->getDirectoryListing();
+		foreach ($list as $listi) {
+			echo $listi->getId() . '/' . $listi->getPath() . ' ' . PHP_EOL;
+		}
+
+		echo "shares->";
+		echo PHP_EOL;
+
+		$shares = $this->shareManager->getAllSharedWith('source-user', [Share::SHARE_TYPE_USER]);
+		foreach ($shares as $sharesi) {
+			echo $sharesi->getId() . '/' . $sharesi->getTarget() . '/' . $sharesi->getShareOwner() . '/' . $sharesi->getSharedBy() . '/' . $sharesi->getSharedWith() . ' ' . PHP_EOL;
+		}
+
+		echo PHP_EOL;
 
 		$file = $sourceUserFolder->get('reshare_file_to_source_user');
 		$share = $this->shareManager->newShare();
