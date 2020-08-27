@@ -1229,16 +1229,24 @@ else
 fi
 if [ "${UNEXPECTED_SUCCESS}" = true ]
 then
-  for unexpected_passed_value in "${UNEXPECTED_PASSED_SCENARIOS[@]}"
-  do
-    if [[ $unexpected_passed_value != *"${BEHAT_FEATURE}"* ]]
-    then
-     tput setaf 3; echo "runsh: There were no unexpected passed scenarios throughout the test run."
-    else
-      tput setaf 3; echo "runsh: Total unexpected passed scenarios throughout the test run:"
-      tput setaf 1; printf "%s\n" "${UNEXPECTED_PASSED_SCENARIOS[@]}"
-    fi
-  done
+  ACTUAL_UNEXPECTED_PASS=()
+  # if running a single scenario
+  if [[ -n "${BEHAT_FEATURE}" && "${BEHAT_FEATURE}" == *":"* ]]
+  then
+    for unexpected_passed_value in "${UNEXPECTED_PASSED_SCENARIOS[@]}"
+    do
+      # check only for the running feature
+      if [[ $unexpected_passed_value != *"${BEHAT_FEATURE}"* ]]
+      then
+        ACTUAL_UNEXPECTED_PASS+="${unexpected_passed_value}"
+      fi
+    done
+  else
+    ACTUAL_UNEXPECTED_PASS="${UNEXPECTED_PASSED_SCENARIOS[@]}"
+  fi
+
+  tput setaf 3; echo "runsh: Total unexpected passed scenarios throughout the test run:"
+  tput setaf 1; printf "%s\n" "${ACTUAL_UNEXPECTED_PASS[@]}"
 
 else
   tput setaf 2; echo "runsh: There were no unexpected success."
