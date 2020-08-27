@@ -30,7 +30,7 @@ Feature: Comments
     And user "Brian" should have the following comments on file "/myFileToComment.txt"
       | user  | comment               |
       | Brian | A comment from sharee |
-      | Alice | A comment from share |
+      | Alice | A comment from sharer |
 
   Scenario: sharee comments on a group shared file
     Given group "grp1" has been created
