@@ -1230,13 +1230,13 @@ fi
 if [ "${UNEXPECTED_SUCCESS}" = true ]
 then
   ACTUAL_UNEXPECTED_PASS=()
-  # if running a single scenario
+  # if running a single feature
   if [[ -n "${BEHAT_FEATURE}" && "${BEHAT_FEATURE}" == *":"* ]]
   then
     for unexpected_passed_value in "${UNEXPECTED_PASSED_SCENARIOS[@]}"
     do
       # check only for the running feature
-      if [[ $unexpected_passed_value != *"${BEHAT_FEATURE}"* ]]
+      if [[ $unexpected_passed_value == "${BEHAT_FEATURE}" ]]
       then
         ACTUAL_UNEXPECTED_PASS+="${unexpected_passed_value}"
       fi
